@@ -2,14 +2,13 @@ package De.SnailCode.SnakeDungeon.GameObjects.Snake;
 
 import De.SnailCode.SnakeDungeon.GameObjects.Player;
 import De.SnailCode.SnakeDungeon.Movements.*;
-import De.SnailCode.SnakeDungeon.Movements.MoveValidation.MoveValidator;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public final class MoveRandom implements ISnakeMovement {
-    private final static Random random = new Random();
+    private final static Random Random = new Random();
 
     private final Map<Integer, IDirectionMovement> snakeMovements = new HashMap<>();
 
@@ -22,7 +21,6 @@ public final class MoveRandom implements ISnakeMovement {
 
     @Override
     public void move(Player player, Snake snake) {
-        final int randomDirection = MoveRandom.random.nextInt(4);
-        MoveValidator.instance().move(snake, this.snakeMovements.get(randomDirection));
+        snake.move(this.snakeMovements.get(MoveRandom.Random.nextInt(4)));
     }
 }

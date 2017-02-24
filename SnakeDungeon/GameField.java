@@ -12,7 +12,6 @@ import De.SnailCode.SnakeDungeon.GameObjects.Snake.Snake;
 import De.SnailCode.SnakeDungeon.GameObjects.Traps.*;
 import De.SnailCode.SnakeDungeon.FieldRenderer.ConsoleDotRenderer;
 import De.SnailCode.SnakeDungeon.Movements.MoveMapper;
-import De.SnailCode.SnakeDungeon.Movements.MoveValidation.MoveValidator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +31,7 @@ public final class GameField implements IGameEventListener {
     private Door door = new Door(GameField.Rows, GameField.Columns);
 
     private List<Trap> traps = new ArrayList<>(Arrays.asList(new Trap(new StunTrapEffect(), GameField.Rows, GameField.Columns),
-            new Trap(new FireTrapEffect(), GameField.Rows, GameField.Columns)));
+            new Trap(new FireTrapEffect(), GameField.Rows, GameField.Columns), new Trap(new MoveLeftTrap(), GameField.Rows, GameField.Columns)));
 
     private List<Snake> snakes = new ArrayList<>(Arrays.asList(new Snake(GameField.Rows, GameField.Columns, new MoveRandom()),
             new Snake(GameField.Rows, GameField.Columns, new MoveRandom()), new Snake(GameField.Rows, GameField.Columns, new MoveRandom())));
@@ -47,7 +46,7 @@ public final class GameField implements IGameEventListener {
     }
 
     public void update(char direction) {
-        MoveValidator.instance().move(this.player, MoveMapper.instance().movement(direction));
+        this.player.move(MoveMapper.instance().movement(direction));
         this.snakes.forEach(snake -> snake.move(this.player));
         this.handleEvents();
         this.updateRenderableObjects();
@@ -70,8 +69,7 @@ public final class GameField implements IGameEventListener {
         this.playerCollision.onCollisionWithObjects(this.coins, coin -> eventComponent.notifyAll(coin, GameEvent.Coin_Collected));
         this.playerCollision.onCollisionWithObjects(this.coins, coin -> eventComponent.notifyAll(coin, GameEvent.Coin_Collected));
         this.playerCollision.onCollisionWithObjects(this.snakes, snake -> this.eventComponent.notifyAll(snake, GameEvent.Snake_Killed_Player));
-
-        // TODO(Mike) 24.02.2017: Ueberarbeiten
+        
         this.playerCollision.onCollisionWithObject(this.door, door -> {
             if (this.player.collectedCoins() == 3) this.eventComponent.notifyAll(this.door, GameEvent.Player_All_Coins_Hit_Door);
             else this.eventComponent.notifyAll(this.door, GameEvent.Player_Not_All_Coins_Hit_Door);

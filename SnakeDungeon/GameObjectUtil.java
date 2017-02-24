@@ -1,7 +1,6 @@
 package De.SnailCode.SnakeDungeon;
 
 import De.SnailCode.SnakeDungeon.GameObjects.GameObject;
-import De.SnailCode.SnakeDungeon.GameObjects.Snake.Snake;
 
 import java.util.List;
 import java.util.stream.Collectors;
